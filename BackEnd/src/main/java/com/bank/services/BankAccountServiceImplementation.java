@@ -31,6 +31,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 
@@ -65,18 +67,21 @@ public class BankAccountServiceImplementation implements BankAccountService {
         Customer customer = dtoMapper.fromCustomerDTO(customerDTO);
         customer = customerRepository.save(customer);
         
-        
         EmailDetails emailDetails=EmailDetails.builder()
         		.recipient(customer.getEmail())
         		.subject("ACCOUNT CREATION")
         		.messageBody("congratulation! You account has been created.\nAccount Deatails:\n Name:"+customer.getName()+"\nAccound Id:"+customer.getId()+"\nPassword:"+customer.getName())
         		.build();
-        CompletableFuture<Void> sendEmailNotification = CompletableFuture.runAsync(() -> {
-        	  // Send the email notification
-            emailService.sendEmailAlert(emailDetails);
-        	});
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        executorService.submit(() -> {
+        	
+        	emailService.sendEmailAlert(emailDetails);
+          // Send the email notification
+        });
+
         
-        sendEmailNotification.join();
+        executorService.shutdown();
         
         AppUser appUser = new AppUser(null, customer.getName(), customer.getName(), new ArrayList<>());
         accountService.addNewUser(appUser);
@@ -183,8 +188,10 @@ public class BankAccountServiceImplementation implements BankAccountService {
         accountOperationRepository.save(accountOperation);
         
         
-        CompletableFuture<Void> sendEmailNotification = CompletableFuture.runAsync(() -> {
-        	  // Send the email notification
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        executorService.submit(() -> {
+          // Send the email notification
         	EmailDetails emailDetails=EmailDetails.builder()
             		.recipient(bankAccount.getCustomer().getEmail())
             		.subject("AMOUNT DEBITED")
@@ -192,8 +199,9 @@ public class BankAccountServiceImplementation implements BankAccountService {
             		.build();
             
             emailService.sendEmailAlert(emailDetails);
-        	});
-        sendEmailNotification.join();
+        });
+        
+        executorService.shutdown();
 
 
     }
@@ -216,18 +224,21 @@ public class BankAccountServiceImplementation implements BankAccountService {
         bankAccountRepository.save(bankAccount);
         accountOperationRepository.save(accountOperation);
         
-        CompletableFuture<Void> sendEmailNotification = CompletableFuture.runAsync(() -> {
-        	  // Send the email notification
-        	 EmailDetails emailDetails=EmailDetails.builder()
+        
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        executorService.submit(() -> {
+          // Send the email notification
+        	EmailDetails emailDetails=EmailDetails.builder()
              		.recipient(bankAccount.getCustomer().getEmail())
              		.subject("AMOUNT CREDITED")
              		.messageBody(amount+".Rs Credited to your account NO:"+bankAccount.getId()+".\n Current Balance:"+bankAccount.getBalance())
              		.build();
              
              emailService.sendEmailAlert(emailDetails);
-        	});
+        });
 
-        sendEmailNotification.join();
+        executorService.shutdown();
 
     }
 
