@@ -216,13 +216,18 @@ public class BankAccountServiceImplementation implements BankAccountService {
         bankAccountRepository.save(bankAccount);
         accountOperationRepository.save(accountOperation);
         
-        EmailDetails emailDetails=EmailDetails.builder()
-        		.recipient(bankAccount.getCustomer().getEmail())
-        		.subject("AMOUNT CREDITED")
-        		.messageBody(amount+".Rs Credited to your account NO:"+bankAccount.getId()+".\n Current Balance:"+bankAccount.getBalance())
-        		.build();
-        
-        emailService.sendEmailAlert(emailDetails);
+        CompletableFuture<Void> sendEmailNotification = CompletableFuture.runAsync(() -> {
+        	  // Send the email notification
+        	 EmailDetails emailDetails=EmailDetails.builder()
+             		.recipient(bankAccount.getCustomer().getEmail())
+             		.subject("AMOUNT CREDITED")
+             		.messageBody(amount+".Rs Credited to your account NO:"+bankAccount.getId()+".\n Current Balance:"+bankAccount.getBalance())
+             		.build();
+             
+             emailService.sendEmailAlert(emailDetails);
+        	});
+
+        sendEmailNotification.join();
 
     }
 

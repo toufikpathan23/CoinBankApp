@@ -1,5 +1,8 @@
 package com.bank.services;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -47,13 +50,20 @@ public class EmailServiceImpl implements EmailService{
 	public OTPDto getOTP(OTPRequestDto otpreqDto) {
 		// TODO Auto-generated method stub
 		String otp=AccountUtils.generateOTP();
-		EmailDetails emailDetails=EmailDetails.builder()
-        		.recipient(otpreqDto.getEmail())
-        		.subject("Verification OTP")
-        		.messageBody("OTP for your email verification:"+otp)
-        		.build();
-        
-        sendEmailAlert(emailDetails);
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+		executorService.submit(() -> {
+			EmailDetails emailDetails=EmailDetails.builder()
+	        		.recipient(otpreqDto.getEmail())
+	        		.subject("Verification OTP")
+	        		.messageBody("OTP for your email verification:"+otp)
+	        		.build();
+	        
+	        sendEmailAlert(emailDetails);
+		  // Send the email notification
+		});
+		
+		executorService.shutdown();
         OTPDto odto=new OTPDto();
         odto.setOtp(otp);
 		return odto;
