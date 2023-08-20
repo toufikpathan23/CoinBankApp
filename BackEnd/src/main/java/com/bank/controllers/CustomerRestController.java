@@ -9,6 +9,7 @@ import com.bank.dtos.OTPDto;
 import com.bank.dtos.OTPRequestDto;
 import com.bank.exceptions.CustomerNotFoundException;
 import com.bank.services.BankAccountService;
+import com.bank.services.CustomerService;
 import com.bank.services.EmailService;
 
 import lombok.AllArgsConstructor;
@@ -34,6 +35,9 @@ public class CustomerRestController {
     
     @Autowired
     private EmailService emailService;
+    
+    @Autowired
+    private CustomerService customerService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/customers")
@@ -91,6 +95,12 @@ public class CustomerRestController {
     	return emailService.getOTP(otpreqDto);
     }
     
+    @PostAuthorize("hasAuthority('ADMIN')or hasAuthority('CUSTOMER')")
+    @PostMapping("/changepassword")
+    public ChangePasswordResDto changePassword(@RequestBody ChangePasswordReqDto changePasswordReqDto)
+    {
+    	return customerService.changePass(changePasswordReqDto);
+    }
 	/*
 	 * @PostAuthorize("hasAuthority('ADMIN')or hasAuthority('CUSTOMER')")
 	 * 

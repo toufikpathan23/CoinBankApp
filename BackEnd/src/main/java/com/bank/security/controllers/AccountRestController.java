@@ -41,6 +41,7 @@ public class AccountRestController {
         return  accountService.addNewUser(appUser);
     }
 
+    
     @PostMapping(path = "/roles")
     @PostAuthorize("hasAuthority('ADMIN')")
     public AppRole saveRole(@RequestBody AppRole appRole) {

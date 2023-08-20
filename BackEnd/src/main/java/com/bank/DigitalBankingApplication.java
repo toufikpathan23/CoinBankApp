@@ -53,10 +53,10 @@ public class DigitalBankingApplication {
 //            accountService.addRoleToUser("Hafsa", "CUSTOMER");
 //            accountService.addRoleToUser("Moussa", "CUSTOMER");
 
-            Stream.of("Yassine", "Hafsa", "Moussa").forEach(name -> {
+            Stream.of("Amit", "Shubham", "Mandar").forEach(name -> {
                 CustomerDTO customer = new CustomerDTO();
                 customer.setName(name);
-                customer.setEmail(name + "@hotmail.com");
+                customer.setEmail(name + "@gmail.com");
                 try {
                     bankAccountService.saveCustomer(customer);
                 } catch (CustomerNotFoundException e) {

@@ -343,8 +343,11 @@ public class BankAccountServiceImplementation implements BankAccountService {
         if (bankAccount == null)
             throw  new BankAccountNotFound("bank not fount ");
         Page<AccountOperation> accountOperationPage = accountOperationRepository.findByBankAccountIdOrderByOperationDateDesc(accountId, PageRequest.of(page,size));
+        System.out.println("Account Operation Page Size: " + accountOperationPage.getSize());
+        System.out.println("Is Account Operation Page Empty? " + accountOperationPage.isEmpty());
         AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
         List<AccountOperationDTO> accountOperationDTOList=accountOperationPage.getContent().stream().map(op->dtoMapper.fromAccountOperation(op)).collect(Collectors.toList());
+        System.out.println(accountOperationDTOList);
         accountHistoryDTO.setAccountOperationDTOList(accountOperationDTOList);
         accountHistoryDTO.setAccountId(bankAccount.getId());
         accountHistoryDTO.setBalance(bankAccount.getBalance());
