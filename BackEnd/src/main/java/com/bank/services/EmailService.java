@@ -8,6 +8,7 @@ import com.bank.dtos.OTPRequestDto;
 public interface EmailService {
 	
 	void sendEmailAlert(EmailDetails emailDetails);
+	void sendEmailwithAttachment(EmailDetails emailDetails);
 
 	OTPDto getOTP(OTPRequestDto otpreqDto);
 

@@ -2,9 +2,16 @@ package com.bank.controllers;
 
 
 import com.bank.dtos.*;
+import com.bank.entities.AccountOperation;
 import com.bank.exceptions.BalanceNotSufficientException;
 import com.bank.exceptions.BankAccountNotFound;
 import com.bank.services.BankAccountServiceImplementation;
+import com.bank.services.BankStatement;
+import com.itextpdf.text.DocumentException;
+
+import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -17,6 +24,9 @@ public class BankAccountRestController {
 
     @Autowired
     BankAccountServiceImplementation bankAccountServiceImplementation;
+    
+    @Autowired
+    private BankStatement bankStatement;
 
     @PostAuthorize("hasAuthority('ADMIN') or hasAuthority('CUSTOMER')")
     @GetMapping("/accounts/{accountId}")
@@ -85,4 +95,13 @@ public class BankAccountRestController {
         bankAccountDTO.setId(accountId);
         return bankAccountServiceImplementation.updateBankAccount(bankAccountDTO);
     }
+    
+    @PostAuthorize("hasAuthority('ADMIN') or hasAuthority('CUSTOMER')")
+    @GetMapping("/statement")
+	public List<AccountOperation> generateBankStatement(
+			@RequestParam String accountNumber/* , @RequestParam String startDate,@RequestParam String endDate */) throws FileNotFoundException, ParseException, DocumentException
+    {
+		return bankStatement.generateStatement(accountNumber/* ,startDate,endDate */);
+    }
+    
 }
