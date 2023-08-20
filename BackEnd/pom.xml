@@ -8,7 +8,7 @@
 		<version>2.6.4</version>
 		<relativePath/>
 	</parent>
-	<groupId>com.elhaddioui.mohamed.digital.banking</groupId>
+	<groupId>CoinBank</groupId>
 	<artifactId>digital.banking</artifactId>
 	<version>1.0.0</version>
 	<name>digital.banking</name>
