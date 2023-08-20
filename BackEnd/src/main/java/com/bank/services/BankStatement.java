@@ -9,12 +9,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bank.dtos.EmailDetails;
 import com.bank.entities.AccountOperation;
+import com.bank.entities.BankAccount;
 import com.bank.entities.Customer;
 import com.bank.repositories.AccountOperationRepository;
 import com.bank.repositories.BankAccountRepository;
@@ -39,6 +43,7 @@ public class BankStatement {
 	private AccountOperationRepository accountOperationRepository;
 	private BankAccountRepository bankAccountRepository;
 	private EmailService emailService;
+	
 	private static final String FILE="C:\\users\\Rafik PATHAN\\Documents\\MyStatement.pdf";
 	/*
 	1. retrieve list of transaction within a date range given an account number
@@ -73,6 +78,7 @@ public class BankStatement {
 		}
 		
 		Customer customer=bankAccountRepository.findById(accountNumber).orElseThrow().getCustomer();
+		BankAccount bankAccount=bankAccountRepository.findById(accountNumber).orElseThrow();
 		String customerName=customer.getName();
 		Rectangle statementSize=new Rectangle(PageSize.A4);
 		Document document=new Document(statementSize);
@@ -93,13 +99,12 @@ public class BankStatement {
 		bankInfoTable.addCell(bankName);
 		bankInfoTable.addCell(bankAdress);
 		
-		PdfPTable statementInfo=new PdfPTable(2);
+		PdfPTable statementInfo=new PdfPTable(3);
 		/*
 		 * PdfPCell customerInfo=new PdfPCell(new Phrase("Start Date:"+startDate));
 		 * customerInfo.setBorder(0);
 		 */
-		PdfPCell statement=new PdfPCell(new Phrase("Statement of Account"));
-		statement.setBorder(0);
+		
 		/*
 		 * PdfPCell stopDate=new PdfPCell(new Phrase("End Date:"+endDate));
 		 * stopDate.setBorder(0);
@@ -107,10 +112,24 @@ public class BankStatement {
 		PdfPCell name=new PdfPCell(new Phrase("Customer Name: "+customerName));
 		name.setBorder(0);
 		PdfPCell space=new PdfPCell();
-		PdfPCell address=new PdfPCell(new Phrase("Customer Adress: Pune"));
+		PdfPCell address=new PdfPCell(new Phrase("Account Number: "+accountNumber));
 		address.setBorder(0);
+		PdfPCell balance=new PdfPCell(new Phrase("Current Balance: "+bankAccount.getBalance()));
+		balance.setBorder(0);
 		
-		PdfPTable transactionsTable=new PdfPTable(5); 
+        statementInfo.addCell(name);
+		statementInfo.addCell(address);
+		statementInfo.addCell(balance);
+		
+		
+		PdfPTable heading=new PdfPTable(1);
+		
+		PdfPCell statement=new PdfPCell(new Phrase("STATEMENT OF ACCOUNT"));
+		statement.setBorder(0);
+		
+		heading.addCell(statement);
+		
+		PdfPTable transactionsTable=new PdfPTable(4); 
 		
 		PdfPCell transactionId=new PdfPCell(new Phrase("Transction Id"));
 		transactionId.setBackgroundColor(BaseColor.BLUE);
@@ -127,15 +146,15 @@ public class BankStatement {
 		transactionAmount.setBackgroundColor(BaseColor.BLUE);
 		transactionAmount.setBorder(0);
 		
-		PdfPCell totalBalance=new PdfPCell(new Phrase("Total Balance"));
+		/*PdfPCell totalBalance=new PdfPCell(new Phrase("Total Balance"));
 		totalBalance.setBackgroundColor(BaseColor.BLUE);
-		totalBalance.setBorder(0);
+		totalBalance.setBorder(0);*/
 		
 		transactionsTable.addCell(transactionId);
 		transactionsTable.addCell(date);
 		transactionsTable.addCell(transactionType);
 		transactionsTable.addCell(transactionAmount);
-		transactionsTable.addCell(totalBalance);
+		//transactionsTable.addCell(totalBalance);
 		
 		operationList.forEach(operation->{ 
 			
@@ -143,22 +162,21 @@ public class BankStatement {
 			transactionsTable.addCell(new Phrase(operation.getOperationDate().toString()));
 			transactionsTable.addCell(new Phrase(operation.getType().toString()));
 			transactionsTable.addCell(new Phrase(String.valueOf(operation.getAmount())));
-			transactionsTable.addCell(new Phrase(String.valueOf(operation.getBankAccount().getBalance())));
+			//transactionsTable.addCell(new Phrase(String.valueOf(operation.getBankAccount().getBalance())));
 			
 		});
 		
-		//statementInfo.addCell(customerInfo);
-		statementInfo.addCell(statement);
-		//statementInfo.addCell(stopDate);
-		statementInfo.addCell(name);
-		statementInfo.addCell(space);
-		statementInfo.addCell(address);
 		
 		document.add(bankInfoTable);
 		document.add(statementInfo);
+		document.add(heading);
 		document.add(transactionsTable);
+		
 		document.close();
 		
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+		executorService.submit(() -> {
 		EmailDetails emailDetails=EmailDetails.builder()
 				.recipient(customer.getEmail())
 				.subject("Statement of Account")
@@ -167,6 +185,9 @@ public class BankStatement {
 				.build();
 		
 		emailService.sendEmailwithAttachment(emailDetails);
+		});
+		
+		executorService.shutdown();
 		
 		return operationList;
 	}
