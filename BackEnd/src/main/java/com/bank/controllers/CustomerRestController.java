@@ -65,7 +65,7 @@ public class CustomerRestController {
         return customersDTO;
     }
 
-    @PostAuthorize("hasAuthority('ADMIN') or hasAuthority('CUSTOMER')")  
+    @PostAuthorize("hasAuthority('ADMIN')")  
     @PostMapping("/customers")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) throws CustomerNotFoundException {
         return bankAccountService.saveCustomer(customerDTO);

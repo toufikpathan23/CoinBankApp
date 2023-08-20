@@ -14,6 +14,7 @@ import com.bank.enums.OperationType;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountOperationDTO {
+	
     private Long id ;
     private Date operationDate;
     private double amount;
