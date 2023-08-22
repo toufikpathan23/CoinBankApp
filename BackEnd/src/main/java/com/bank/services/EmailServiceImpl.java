@@ -65,8 +65,8 @@ public class EmailServiceImpl implements EmailService{
 		executorService.submit(() -> {
 			EmailDetails emailDetails=EmailDetails.builder()
 	        		.recipient(otpreqDto.getEmail())
-	        		.subject("Verification OTP")
-	        		.messageBody("OTP for your email verification:"+otp)
+	        		.subject("Authentication OTP")
+	        		.messageBody("Your OTP for Authentication:"+otp)
 	        		.build();
 	        
 	        sendEmailAlert(emailDetails);
