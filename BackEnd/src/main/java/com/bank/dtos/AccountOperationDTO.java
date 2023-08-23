@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.bank.enums.OperationType;
@@ -16,7 +18,7 @@ import com.bank.enums.OperationType;
 public class AccountOperationDTO {
 	
     private Long id ;
-    private Date operationDate;
+    private LocalDateTime operationDate;
     private double amount;
     private OperationType type;
     private String description;

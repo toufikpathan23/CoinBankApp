@@ -26,6 +26,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -343,11 +348,17 @@ public class BankAccountServiceImplementation implements BankAccountService {
         if (bankAccount == null)
             throw  new BankAccountNotFound("bank not fount ");
         Page<AccountOperation> accountOperationPage = accountOperationRepository.findByBankAccountIdOrderByOperationDateDesc(accountId, PageRequest.of(page,size));
-        System.out.println("Account Operation Page Size: " + accountOperationPage.getSize());
-        System.out.println("Is Account Operation Page Empty? " + accountOperationPage.isEmpty());
+        
         AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
-        List<AccountOperationDTO> accountOperationDTOList=accountOperationPage.getContent().stream().map(op->dtoMapper.fromAccountOperation(op)).collect(Collectors.toList());
-        System.out.println(accountOperationDTOList);
+        //List<AccountOperationDTO> accountOperationDTOList=accountOperationPage.getContent().stream().map(op->dtoMapper.fromAccountOperation(op)).collect(Collectors.toList());
+        //System.out.println(accountOperationDTOList);
+        List<AccountOperationDTO> accountOperationDTOList = accountOperationPage.getContent().stream().map(op -> {
+        	LocalDateTime localDateTime = op.getOperationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            
+            AccountOperationDTO accountOperationDTO = dtoMapper.fromAccountOperation(op);
+            accountOperationDTO.setOperationDate(localDateTime);
+            return accountOperationDTO;
+        }).collect(Collectors.toList());
         accountHistoryDTO.setAccountOperationDTOList(accountOperationDTOList);
         accountHistoryDTO.setAccountId(bankAccount.getId());
         accountHistoryDTO.setBalance(bankAccount.getBalance());

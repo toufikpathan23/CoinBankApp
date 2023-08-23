@@ -39,7 +39,7 @@ public class AccountUtils {
 		
 		int max=9999;
 		
-		int randomNumber=(int)Math.floor(Math.random()*(max-min+1));
+		int randomNumber=(int)Math.floor(Math.random()*(max-min+1))+min;
 		
 		return String.valueOf(randomNumber);
 	} 
