@@ -365,6 +365,7 @@ public class BankAccountServiceImplementation implements BankAccountService {
         accountHistoryDTO.setPageSize(size);
         accountHistoryDTO.setCurrentPage(page);
         accountHistoryDTO.setTotalPages(accountOperationPage.getTotalPages());
+        accountHistoryDTO.setCustomerId(bankAccount.getCustomer().getId());
         return accountHistoryDTO;
 
    }
