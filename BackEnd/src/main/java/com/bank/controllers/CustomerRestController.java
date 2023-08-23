@@ -7,7 +7,9 @@ import com.bank.dtos.CustomerDTO;
 import com.bank.dtos.CustomersDTO;
 import com.bank.dtos.OTPDto;
 import com.bank.dtos.OTPRequestDto;
+import com.bank.entities.Customer;
 import com.bank.exceptions.CustomerNotFoundException;
+import com.bank.repositories.CustomerRepository;
 import com.bank.services.BankAccountService;
 import com.bank.services.CustomerService;
 import com.bank.services.EmailService;
@@ -38,6 +40,8 @@ public class CustomerRestController {
     
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/customers")
@@ -99,6 +103,16 @@ public class CustomerRestController {
     @PostMapping("/changepassword")
     public ChangePasswordResDto changePassword(@RequestBody ChangePasswordReqDto changePasswordReqDto)
     {
+    	System.out.println(changePasswordReqDto.toString());
+    	if(changePasswordReqDto.getName()=="abc")
+    	{
+    		Customer cust=customerRepository.findByEmail(changePasswordReqDto.getEmail());
+    		
+    		changePasswordReqDto.setName(cust.getName());
+    		
+    		return customerService.changePass(changePasswordReqDto);
+    	}
+    	
     	return customerService.changePass(changePasswordReqDto);
     }
 	/*
