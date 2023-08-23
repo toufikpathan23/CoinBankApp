@@ -44,7 +44,7 @@ public class BankStatement {
 	private BankAccountRepository bankAccountRepository;
 	private EmailService emailService;
 	
-	private static final String FILE="C:\\users\\Rafik PATHAN\\Documents\\MyStatement.pdf";
+	private static final String FILE="F:\\bankgit\\MyStatement.pdf";
 	/*
 	1. retrieve list of transaction within a date range given an account number
 	2. generate a pdf file transaction.
