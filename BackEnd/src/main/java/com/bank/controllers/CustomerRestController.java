@@ -103,11 +103,12 @@ public class CustomerRestController {
     @PostMapping("/changepassword")
     public ChangePasswordResDto changePassword(@RequestBody ChangePasswordReqDto changePasswordReqDto)
     {
-    	System.out.println(changePasswordReqDto.toString());
-    	if(changePasswordReqDto.getName()=="abc")
+    	//System.out.println(changePasswordReqDto.toString());
+    	if(changePasswordReqDto.getName().equals("abc"))
     	{
+    		System.out.println("I am inside here...");
     		Customer cust=customerRepository.findByEmail(changePasswordReqDto.getEmail());
-    		
+    		System.out.println("Customer"+cust.toString());
     		changePasswordReqDto.setName(cust.getName());
     		
     		return customerService.changePass(changePasswordReqDto);
