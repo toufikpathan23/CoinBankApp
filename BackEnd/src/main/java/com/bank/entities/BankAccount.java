@@ -28,7 +28,9 @@ public class BankAccount {
     @Id
     private String id;
     private double balance;
+
     @Temporal(TemporalType.TIMESTAMP)
+
     private Date createdAt;
 
     @Enumerated(EnumType.STRING)
