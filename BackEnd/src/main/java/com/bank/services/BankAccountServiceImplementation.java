@@ -104,6 +104,7 @@ public class BankAccountServiceImplementation implements BankAccountService {
         if (customer == null)
             throw new CustomerNotFoundException("Customer Not Found");
         SavingAccount savingAccount = new SavingAccount();
+        savingAccount.setCreatedAt(new Date());
         //savingAccount.setId(UUID.randomUUID().toString());
         savingAccount.setId(AccountUtils.generateAccountNumber());
         savingAccount.setInterestRate(interestRate);
@@ -121,6 +122,7 @@ public class BankAccountServiceImplementation implements BankAccountService {
         if (customer == null)
             throw new CustomerNotFoundException("Customer Not Found");
         CurrentAccount currentAccount = new CurrentAccount();
+        currentAccount.setCreatedAt(new Date());
         currentAccount.setId(AccountUtils.generateAccountNumber());
         currentAccount.setOverDraft(overdraft);
         currentAccount.setCustomer(customer);
@@ -176,7 +178,7 @@ public class BankAccountServiceImplementation implements BankAccountService {
     }
 
     @Override
-    public void debit(String accountId, double amount , String description) throws BalanceNotSufficientException, BankAccountNotFound {
+    public synchronized void debit(String accountId, double amount , String description) throws BalanceNotSufficientException, BankAccountNotFound {
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(()->new BankAccountNotFound("Account not found") );
         if (bankAccount.getBalance() < amount) {
             throw new BalanceNotSufficientException("Balance not sufficient");
@@ -213,7 +215,7 @@ public class BankAccountServiceImplementation implements BankAccountService {
 
 
     @Override
-    public void credit(String accountId, double amount , String description) throws BankAccountNotFound {
+    public synchronized void credit(String accountId, double amount , String description) throws BankAccountNotFound {
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(()->new BankAccountNotFound("Account not found") );
 
         if (bankAccount == null)

@@ -28,10 +28,10 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public ChangePasswordResDto changePass(ChangePasswordReqDto changePasswordReqDto) {
 		// TODO Auto-generated method stub
-	System.out.println(changePasswordReqDto.toString());
+	//System.out.println(changePasswordReqDto.toString());
 		String userName=changePasswordReqDto.getName();
 		AppUser user=appUserRepository.findAppUserByUsername(userName);
-		
+		System.out.println("User:"+user);
 		String pw = changePasswordReqDto.getPassword();
         user.setPassword(passwordEncoder.encode(pw));
         

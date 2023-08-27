@@ -2,7 +2,10 @@ package com.bank.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -18,15 +21,18 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="Type",length = 4)
+@Setter
+@Getter
 public class BankAccount {
 
     @Id
     private String id;
     private double balance;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Enumerated(EnumType.STRING)
-    private AccountStatus status;
+    private AccountStatus status=AccountStatus.ACTIVATED;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)

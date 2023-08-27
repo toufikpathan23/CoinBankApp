@@ -79,7 +79,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String,String> idToken = new  HashMap<>();
         idToken.put("jwt",jwtAccessToken);
         idToken.put("refreshToken",jwtRefreshToken);
-        idToken.put("roles",user.getAuthorities().stream().map(ga->ga.getAuthority()).collect(Collectors.toList()).toString());
+        //idToken.put("roles",user.getAuthorities().stream().map(ga->ga.getAuthority()).collect(Collectors.toList()).toString());
+        idToken.put("roles", String.join(",", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())));
+
         if (user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).toString().contains("CUSTOMER")) {
             idToken.put("id", String.valueOf(1));
 

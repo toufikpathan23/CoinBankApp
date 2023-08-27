@@ -43,8 +43,8 @@ public class CustomerRestController {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/customers")
+    @PreAuthorize("permitAll()")
+    @GetMapping("/customers/all/{page}")
     public List<CustomerDTO> customers(@PathVariable int page) {
         return bankAccountService.listCustomers(page);
     }
@@ -55,7 +55,7 @@ public class CustomerRestController {
         return bankAccountService.bankAccountListOfCustomer(customerId);
     }
 
-    @PostAuthorize("hasAuthority('ADMIN') or hasAuthority('CUSTOMER')")
+    @PostAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @GetMapping("/customers/{id}")
     public CustomerDTO getCustomer(@PathVariable(name = "id") Long customerId) throws CustomerNotFoundException {
         return bankAccountService.getCustomer(customerId);
@@ -73,8 +73,8 @@ public class CustomerRestController {
         return customersDTO;
     }
 
-    @PostAuthorize("hasAuthority('ADMIN')")  
-    @PostMapping("/customers")
+      
+    @PostMapping("/customers/save")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) throws CustomerNotFoundException {
         return bankAccountService.saveCustomer(customerDTO);
     }
@@ -86,28 +86,29 @@ public class CustomerRestController {
         return bankAccountService.updateCustomer(customerDTO);
     }
 
-    @PostAuthorize("hasAuthority('ADMIN')")
+    @PostAuthorize("hasAuthority('ADMIN') or hasAuthority('CUSTOMER')")
     @DeleteMapping("/customers/{customerId}")
     public void deleteCustomer(@PathVariable Long customerId) {
         bankAccountService.deleteCustomer(customerId);
     }
     
-    @PostAuthorize("hasAuthority('ADMIN')or hasAuthority('CUSTOMER')")
+    
     @PostMapping("/verifyOtp")
     public OTPDto generateOTP(@RequestBody OTPRequestDto otpreqDto) 
     {
     	return emailService.getOTP(otpreqDto);
     }
     
-    @PostAuthorize("hasAuthority('ADMIN')or hasAuthority('CUSTOMER')")
+    
     @PostMapping("/changepassword")
     public ChangePasswordResDto changePassword(@RequestBody ChangePasswordReqDto changePasswordReqDto)
     {
-    	//System.out.println(changePasswordReqDto.toString());
+    	System.out.println(changePasswordReqDto.toString());
     	if(changePasswordReqDto.getName().equals("abc"))
     	{
     		System.out.println("I am inside here...");
     		Customer cust=customerRepository.findByEmail(changePasswordReqDto.getEmail());
+    		System.out.println(cust);
     		System.out.println("Customer"+cust.toString());
     		changePasswordReqDto.setName(cust.getName());
     		
