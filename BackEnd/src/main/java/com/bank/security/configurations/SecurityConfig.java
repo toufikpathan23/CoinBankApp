@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
         http.headers().frameOptions().disable();
         //http.authorizeRequests().antMatchers("/h2-console/**","/refreshToken/**","/login/**").permitAll().anyRequest().authenticated();
-        http.authorizeRequests().antMatchers("/refreshToken/**","/login/**","/customers/save","/verifyOtp","/changepassword").permitAll().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/refreshToken/**","/login/**","/customers/save","/verifyOtp","/changepassword","/statement").permitAll().anyRequest().authenticated();
        
         http.addFilter(new JwtAuthenticationFilter(authenticationManagerBean(), appUserRepository));
         http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

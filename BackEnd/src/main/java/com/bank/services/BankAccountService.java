@@ -24,7 +24,7 @@ public interface BankAccountService {
 
     BankAccountDTO getBankAccount(String accountId) throws BankAccountNotFound;
 
-    void debit(String accountId, double amount, String description) throws BalanceNotSufficientException, BankAccountNotFound;
+    void debit(String accountId, double amount, String description,String upiId) throws BalanceNotSufficientException, BankAccountNotFound;
 
     void credit(String accountId, double amount, String description) throws BankAccountNotFound;
 
