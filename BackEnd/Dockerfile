@@ -1,5 +1,6 @@
 FROM openjdk:11
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+
 EXPOSE 9000
-ENTRYPOINT ["java","-jar","/app.jar"]
+ADD target/digital.banking-1.0.0.jar digital.banking-1.0.0.jar
+
+ENTRYPOINT ["java","-jar","digital.banking-1.0.0.jar"]
