@@ -1,0 +1,27 @@
+.view-profile-button {
+
+
+
+  background-color: #14d17c;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  float: right;
+}
+
+/* .background-container {
+  background-image: url('/public/img/bank3.jpg');
+  /* Set the URL of your image */
+  /* background-size: cover; */
+  /* Adjust the size of the background */
+  /* background-repeat: no-repeat; */
+  /* Prevent background image from repeating */
+  /* background-position: center center; */
+  /* Center the background image */
+
+
+/* } */ 
