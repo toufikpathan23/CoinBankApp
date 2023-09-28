@@ -2,10 +2,7 @@
 import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiUrl } from '../common/constant';
-<<<<<<< HEAD
-=======
 
->>>>>>> 4440c7656825465831a30a9a20fde9566c40b809
 import axios from 'axios';
 
 function RequestResetComponent() {

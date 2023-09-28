@@ -42,7 +42,7 @@ public class CustomerRestController {
     private CustomerService customerService;
     @Autowired
     private CustomerRepository customerRepository;
-
+    
     @PreAuthorize("permitAll()")
     @GetMapping("/customers/all/{page}")
     public List<CustomerDTO> customers(@PathVariable int page) {
