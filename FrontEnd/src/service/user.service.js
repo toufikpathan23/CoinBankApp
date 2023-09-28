@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_apiUrl } from "../common/constant";
 import { AuthHeader } from "./auth.header";
 
-const apiUrl = "http://localhost:9000"
+const apiUrl = "http://localhost:8080"
 
 class userService {
     register(user) {
