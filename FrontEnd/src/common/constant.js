@@ -1,4 +1,4 @@
 
 
 
-export const apiUrl="http://localhost:8080";
+export const apiUrl="http://13.235.77.5 :5000";
