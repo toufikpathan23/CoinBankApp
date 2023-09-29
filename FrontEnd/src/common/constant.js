@@ -1,4 +1,4 @@
 
 
 
-export const apiUrl="http://13.127.190.20:8080";
+export const apiUrl="http://13.232.239.157:8080";

@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_apiUrl } from "../common/constant";
 import { AuthHeader } from "./auth.header";
 
-const apiUrl = "http://13.127.190.20:8080"
+const apiUrl = "http://13.232.239.157:8080"
 
 class accountService {
 

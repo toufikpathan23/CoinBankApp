@@ -38,7 +38,7 @@ const CustomerAccountsComponent = () => {
     }
 
     fetchData();
-  }, [id]);
+  }, []);
 
   const viewOperations = (account) => {
     navigate(`/one-account/${account.id}`, {state:id});
